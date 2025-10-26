@@ -1,6 +1,24 @@
 {
   "images": [
     {
+      "id": "a9ac5651-bbdd-466e-88ee-c8968e7dbf84",
+      "filename": "500709558_1891612954932191_2087496814318583496_n.jpg",
+      "url": "https://res.cloudinary.com/dgzutajrr/image/upload/v1761491955/locket_memories/a9ac5651-bbdd-466e-88ee-c8968e7dbf84.jpg",
+      "caption": "Vợ tui xink xắn, lung linh quáaaaa",
+      "uploaded_at": "2025-10-26T15:19:15.768043Z",
+      "storage": "cloudinary",
+      "cloudinary_id": "locket_memories/a9ac5651-bbdd-466e-88ee-c8968e7dbf84"
+    },
+    {
+      "id": "49d522b3-7fed-49ea-86aa-9cba0cd6bd6d",
+      "filename": "18577e7a-d7eb-4dd1-9a8f-c4221ad54975.jpg",
+      "url": "https://res.cloudinary.com/dgzutajrr/image/upload/v1761490825/locket_memories/49d522b3-7fed-49ea-86aa-9cba0cd6bd6d.jpg",
+      "caption": "Cre: mYm",
+      "uploaded_at": "2025-10-26T15:00:23.641628Z",
+      "storage": "cloudinary",
+      "cloudinary_id": "locket_memories/49d522b3-7fed-49ea-86aa-9cba0cd6bd6d"
+    },
+    {
       "id": "1e3c6607-8507-4add-bc17-16cbfa512d3c",
       "filename": "20251026_194547_1e3c6607_457403692_10162040959965891_5564912530089329026_n.jpg",
       "url": "/static/uploads/20251026_194547_1e3c6607_457403692_10162040959965891_5564912530089329026_n.jpg",

@@ -12,10 +12,14 @@ import uuid
 
 load_dotenv()
 
-app = Flask(__name__, static_folder='static', template_folder='.')
+# Cấu hình Flask với thư mục đúng
+app = Flask(__name__, 
+            static_folder='static',
+            static_url_path='/static',
+            template_folder='templates')
 CORS(app)
 
-# Cấu hình
+# Cấu hình upload
 UPLOAD_FOLDER = 'static/uploads'
 METADATA_FILE = 'images_metadata.json'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'heic', 'webp'}
@@ -57,6 +61,11 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/gallery')
+@app.route('/gallery.html')
+def gallery():
+    return render_template('gallery.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -128,6 +137,7 @@ def upload_file():
         }), 200
             
     except Exception as e:
+        print(f"Upload error: {str(e)}")
         return jsonify({'error': f'Lỗi khi tải ảnh lên: {str(e)}'}), 500
 
 @app.route('/images', methods=['GET'])
@@ -143,13 +153,13 @@ def get_images():
                     prefix="locket_memories/",
                     max_results=500
                 )
-                # Update URLs từ Cloudinary (phòng trường hợp thay đổi)
+                # Update URLs từ Cloudinary
                 cloudinary_images = {r['public_id']: r['secure_url'] for r in result['resources']}
                 for img in metadata['images']:
                     if img.get('storage') == 'cloudinary' and img.get('cloudinary_id') in cloudinary_images:
                         img['url'] = cloudinary_images[img['cloudinary_id']]
-            except:
-                pass  # Nếu lỗi thì dùng metadata cũ
+            except Exception as e:
+                print(f"Cloudinary sync error: {str(e)}")
         
         return jsonify({
             'success': True,
@@ -158,6 +168,7 @@ def get_images():
         }), 200
         
     except Exception as e:
+        print(f"Get images error: {str(e)}")
         return jsonify({'error': f'Lỗi khi lấy danh sách ảnh: {str(e)}'}), 500
 
 @app.route('/delete/<image_id>', methods=['DELETE'])
@@ -178,7 +189,10 @@ def delete_image(image_id):
         # Xóa file
         if image_to_delete['storage'] == 'cloudinary':
             # Xóa từ Cloudinary
-            cloudinary.uploader.destroy(image_to_delete['cloudinary_id'])
+            try:
+                cloudinary.uploader.destroy(image_to_delete['cloudinary_id'])
+            except Exception as e:
+                print(f"Cloudinary delete error: {str(e)}")
         else:
             # Xóa local file
             filepath = os.path.join('static/uploads', image_to_delete['filename'])
@@ -195,12 +209,22 @@ def delete_image(image_id):
         }), 200
         
     except Exception as e:
+        print(f"Delete error: {str(e)}")
         return jsonify({'error': f'Lỗi khi xóa ảnh: {str(e)}'}), 500
 
-@app.route('/static/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+# Error handlers
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({'error': 'Not found'}), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    return jsonify({'error': 'Server error'}), 500
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    print(f"🚀 Server starting on http://localhost:{port}")
+    print(f"📁 Static folder: {app.static_folder}")
+    print(f"📁 Template folder: {app.template_folder}")
+    print(f"💾 Using Cloudinary: {USE_CLOUDINARY}")
+    app.run(host='0.0.0.0', port=port, debug=True)

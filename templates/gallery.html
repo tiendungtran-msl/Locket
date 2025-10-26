@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💝 Our Memories - Kỷ Niệm</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/gallery.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+</head>
+<body>
+    <!-- Music Control -->
+    <div class="music-control" id="musicControl">
+        <button class="music-btn" id="musicBtn" onclick="toggleMusicMenu()">
+            🎵
+        </button>
+        <div class="music-menu" id="musicMenu">
+            <div class="music-header">🎶 Nhạc nền lãng mạn</div>
+            <div class="music-list">
+                <button class="music-item" onclick="changeMusic(1)">
+                    <span class="music-icon">🎵</span>
+                    <span class="music-name">Romantic 1</span>
+                </button>
+                <button class="music-item" onclick="changeMusic(2)">
+                    <span class="music-icon">🎵</span>
+                    <span class="music-name">Romantic 2</span>
+                </button>
+                <button class="music-item" onclick="changeMusic(3)">
+                    <span class="music-icon">🎵</span>
+                    <span class="music-name">Romantic 3</span>
+                </button>
+            </div>
+            <div class="volume-control">
+                <span class="volume-icon">🔊</span>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50">
+                <span class="volume-value" id="volumeValue">50%</span>
+            </div>
+            <button class="music-play-btn" id="musicPlayBtn" onclick="toggleMusicPlayPause()">
+                ▶️ Phát nhạc
+            </button>
+        </div>
+    </div>
+
+    <!-- Audio Player -->
+    <audio id="musicPlayer" loop>
+        <source src="/static/music/romantic1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Floating Hearts -->
+    <div class="floating-hearts-container"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">💝 Our Memories</a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">🏠 Trang chủ</a>
+                <a href="/gallery" class="nav-link active">📷 Xem kỷ niệm</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="page-header">
+            <h1 class="main-title">📷 Kỷ Niệm Của Chúng Ta</h1>
+            <p class="image-count" id="imageCount">Đang tải...</p>
+        </header>
+
+        <!-- Gallery Controls -->
+        <div class="gallery-controls">
+            <button class="control-btn" id="slideshowBtn" onclick="startSlideshow()">
+                <span class="btn-icon">🎬</span>
+                <span class="btn-text">Slideshow</span>
+            </button>
+            <button class="control-btn" onclick="location.href='/'">
+                <span class="btn-icon">➕</span>
+                <span class="btn-text">Thêm mới</span>
+            </button>
+            <button class="control-btn" onclick="refreshGallery()">
+                <span class="btn-icon">🔄</span>
+                <span class="btn-text">Làm mới</span>
+            </button>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="gallery" id="gallery">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Đang tải kỷ niệm...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+        <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">‹</button>
+        <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">›</button>
+        
+        <div class="lightbox-content">
+            <div class="lightbox-image-container">
+                <img id="lightboxImg" src="" alt="Memory">
+            </div>
+            <div class="lightbox-info">
+                <div class="lightbox-caption" id="lightboxCaption"></div>
+                <div class="lightbox-date" id="lightboxDate"></div>
+                <div class="lightbox-actions">
+                    <button class="lightbox-btn download-btn" onclick="downloadCurrentImage()">
+                        <span class="btn-icon">⬇️</span>
+                        <span class="btn-text">Tải xuống</span>
+                    </button>
+                    <button class="lightbox-btn delete-btn" onclick="deleteFromLightbox()">
+                        <span class="btn-icon">🗑️</span>
+                        <span class="btn-text">Xóa</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slideshow -->
+    <div class="slideshow-container" id="slideshow">
+        <button class="slideshow-close" onclick="stopSlideshow()">✕</button>
+        
+        <div class="slideshow-content">
+            <div class="slideshow-image-container">
+                <img class="slideshow-image" id="slideshowImg" src="" alt="Memory">
+            </div>
+            <div class="slideshow-info">
+                <div class="slideshow-caption" id="slideshowCaption"></div>
+                <div class="slideshow-date" id="slideshowDate"></div>
+            </div>
+        </div>
+        
+        <div class="slideshow-progress">
+            <span id="slideshowProgress">1 / 10</span>
+        </div>
+        
+        <button class="slideshow-control pause-btn" id="pauseBtn" onclick="toggleSlideshow()">
+            ⏸️
+        </button>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <h3 class="modal-title">⚠️ Xác nhận xóa</h3>
+            <p class="modal-text">Bạn có chắc muốn xóa ảnh này không?<br>Hành động này không thể hoàn tác.</p>
+            <div class="modal-actions">
+                <button class="modal-btn confirm-btn" onclick="confirmDelete()">
+                    <span class="btn-icon">🗑️</span>
+                    <span class="btn-text">Xóa</span>
+                </button>
+                <button class="modal-btn cancel-btn" onclick="closeModal()">
+                    <span class="btn-icon">✕</span>
+                    <span class="btn-text">Hủy</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Made with ❤️ for our memories</p>
+    </footer>
+
+    <!-- Scripts - Thứ tự quan trọng -->
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/music.js"></script>
+    <script src="/static/js/gallery.js"></script>
+    <script src="/static/js/lightbox.js"></script>
+    <script src="/static/js/slideshow.js"></script>
+</body>
+</html>

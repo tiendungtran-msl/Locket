@@ -1,0 +1,634 @@
+/* ========================================
+   IMPORTS & VARIABLES
+   ======================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Dancing+Script:wght@400;600;700&display=swap');
+
+:root {
+    /* Instagram-inspired Color Palette */
+    --ig-purple: #833AB4;
+    --ig-pink: #FD1D1D;
+    --ig-orange: #FCAF45;
+    --ig-gradient: linear-gradient(135deg, #833AB4 0%, #C13584 25%, #E1306C 50%, #FD1D1D 75%, #FCAF45 100%);
+    
+    /* Romantic Colors */
+    --romantic-rose: #FF6B9D;
+    --romantic-lavender: #C780E8;
+    --romantic-peach: #FFA07A;
+    --soft-pink: #FFE5EC;
+    --soft-purple: #E5DEFF;
+    --soft-cream: #FFF8F0;
+    
+    /* Neutral Colors */
+    --white: #FFFFFF;
+    --off-white: #FAFAFA;
+    --light-gray: #F5F5F5;
+    --border-gray: #DBDBDB;
+    --text-gray: #8E8E8E;
+    --text-dark: #262626;
+    --black: #000000;
+    
+    /* Gradients */
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --romantic-gradient: linear-gradient(135deg, #FF6B9D 0%, #C780E8 50%, #667eea 100%);
+    --sunset-gradient: linear-gradient(135deg, #FFA07A 0%, #FF6B9D 50%, #C780E8 100%);
+    
+    /* Typography Scale (Instagram-like) */
+    --font-xs: 0.6875rem;      /* 11px */
+    --font-sm: 0.75rem;        /* 12px */
+    --font-base: 0.875rem;     /* 14px */
+    --font-md: 0.9375rem;      /* 15px */
+    --font-lg: 1rem;           /* 16px */
+    --font-xl: 1.125rem;       /* 18px */
+    --font-2xl: 1.5rem;        /* 24px */
+    --font-3xl: 2rem;          /* 32px */
+    --font-4xl: 2.5rem;        /* 40px */
+    --font-5xl: 3.5rem;        /* 56px */
+    
+    /* Font Families */
+    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-script: 'Dancing Script', cursive;
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;     /* 4px */
+    --spacing-sm: 0.5rem;      /* 8px */
+    --spacing-md: 1rem;        /* 16px */
+    --spacing-lg: 1.5rem;      /* 24px */
+    --spacing-xl: 2rem;        /* 32px */
+    --spacing-2xl: 3rem;       /* 48px */
+    --spacing-3xl: 4rem;       /* 64px */
+    
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+    
+    /* Shadows (Instagram-style) */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.16);
+    
+    /* Transitions */
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   RESET & BASE STYLES
+   ======================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--font-primary);
+    font-size: var(--font-base);
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text-dark);
+    background: var(--off-white);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ========================================
+   INSTAGRAM-STYLE BACKGROUND
+   ======================================== */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+        rgba(131, 58, 180, 0.03) 0%, 
+        rgba(253, 29, 29, 0.02) 50%, 
+        rgba(252, 175, 69, 0.03) 100%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Romantic floating elements */
+.floating-hearts-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+@keyframes float-hearts {
+    0% {
+        transform: translateY(100vh) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-100vh) translateX(50px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.floating-heart {
+    position: absolute;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    animation: float-hearts 15s infinite ease-in-out;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 4px rgba(255, 107, 157, 0.3));
+}
+
+/* ========================================
+   NAVIGATION BAR (Instagram-style)
+   ======================================== */
+.navbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border-gray);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: var(--spacing-md) 0;
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.nav-container {
+    max-width: 935px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    font-family: var(--font-script);
+    font-size: clamp(var(--font-2xl), 4vw, var(--font-3xl));
+    font-weight: 600;
+    background: var(--ig-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-decoration: none;
+    transition: var(--transition-normal);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.nav-brand:hover {
+    transform: scale(1.02);
+}
+
+.nav-links {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: center;
+}
+
+.nav-link {
+    position: relative;
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: var(--font-base);
+    font-weight: 600;
+    transition: var(--transition-normal);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.nav-link i {
+    font-size: var(--font-lg);
+}
+
+.nav-link:hover {
+    background: var(--light-gray);
+    color: var(--ig-purple);
+}
+
+.nav-link.active {
+    color: var(--ig-purple);
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -17px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--ig-gradient);
+}
+
+/* ========================================
+   MUSIC CONTROL (Instagram Story-style)
+   ======================================== */
+.music-control {
+    position: fixed;
+    bottom: var(--spacing-2xl);
+    right: var(--spacing-2xl);
+    z-index: 200;
+}
+
+.music-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2px solid var(--border-gray);
+    font-size: var(--font-xl);
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.music-btn::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: var(--ig-gradient);
+    z-index: -1;
+    opacity: 0;
+    transition: var(--transition-normal);
+}
+
+.music-btn:hover::before,
+.music-btn.playing::before {
+    opacity: 1;
+}
+
+.music-btn:hover {
+    transform: scale(1.05);
+    border-color: transparent;
+}
+
+.music-btn.playing {
+    animation: pulse-music 2s infinite;
+    border-color: transparent;
+}
+
+@keyframes pulse-music {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.music-menu {
+    position: absolute;
+    bottom: 72px;
+    right: 0;
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    padding: var(--spacing-lg);
+    min-width: 280px;
+    display: none;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.music-menu.active {
+    display: block;
+}
+
+.music-header {
+    font-size: var(--font-lg);
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-gray);
+}
+
+.music-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.music-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    border: none;
+    background: var(--light-gray);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-size: var(--font-base);
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.music-item:hover {
+    background: var(--soft-purple);
+    transform: translateX(4px);
+}
+
+.music-item.active {
+    background: var(--romantic-gradient);
+    color: var(--white);
+}
+
+.music-icon {
+    font-size: var(--font-lg);
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-gray);
+}
+
+.volume-icon {
+    font-size: var(--font-lg);
+    color: var(--text-gray);
+}
+
+.volume-slider {
+    flex: 1;
+    height: 4px;
+    border-radius: var(--radius-full);
+    outline: none;
+    -webkit-appearance: none;
+    background: var(--border-gray);
+    cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--ig-gradient);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fast);
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--ig-gradient);
+    cursor: pointer;
+    border: none;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fast);
+}
+
+.volume-slider::-moz-range-thumb:hover {
+    transform: scale(1.2);
+}
+
+.volume-value {
+    font-size: var(--font-sm);
+    font-weight: 600;
+    color: var(--text-gray);
+    min-width: 3rem;
+    text-align: right;
+}
+
+.music-play-btn {
+    width: 100%;
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-md);
+    border: none;
+    background: var(--ig-gradient);
+    color: var(--white);
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+.music-play-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ========================================
+   CONTAINER
+   ======================================== */
+.container {
+    max-width: 935px;
+    margin: 0 auto;
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    position: relative;
+    z-index: 2;
+}
+
+/* ========================================
+   PAGE HEADER (Instagram-style)
+   ======================================== */
+.page-header {
+    text-align: center;
+    margin-bottom: var(--spacing-3xl);
+    animation: fadeInDown 0.8s ease;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.main-title {
+    font-family: var(--font-display);
+    font-size: clamp(var(--font-3xl), 6vw, var(--font-5xl));
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: var(--spacing-md);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.main-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: var(--ig-gradient);
+    margin: var(--spacing-lg) auto 0;
+    border-radius: var(--radius-full);
+}
+
+.subtitle {
+    font-size: clamp(var(--font-base), 2vw, var(--font-xl));
+    color: var(--text-gray);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    margin-top: var(--spacing-md);
+}
+
+.image-count {
+    font-size: clamp(var(--font-base), 2vw, var(--font-lg));
+    color: var(--text-gray);
+    font-weight: 500;
+    margin-top: var(--spacing-sm);
+}
+
+/* ========================================
+   LOADING & SPINNER
+   ======================================== */
+.loading {
+    text-align: center;
+    padding: var(--spacing-3xl);
+    color: var(--text-gray);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-gray);
+    border-top: 3px solid var(--ig-purple);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto var(--spacing-lg);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading p {
+    font-size: var(--font-base);
+    font-weight: 500;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+.footer {
+    text-align: center;
+    padding: var(--spacing-2xl) var(--spacing-md);
+    color: var(--text-gray);
+    font-size: var(--font-sm);
+    margin-top: var(--spacing-3xl);
+    border-top: 1px solid var(--border-gray);
+}
+
+.footer p {
+    margin: var(--spacing-sm) 0;
+}
+
+.footer-small {
+    font-size: var(--font-xs);
+    opacity: 0.7;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: var(--spacing-sm);
+    font-size: 1.1em;
+}
+
+.btn-text {
+    display: inline-block;
+}
+
+/* Instagram-style focus states */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--ig-purple);
+    outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light-gray);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-gray);
+    border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-gray);
+}
+
+/* Selection color */
+::selection {
+    background: var(--soft-purple);
+    color: var(--text-dark);
+}
+
+::-moz-selection {
+    background: var(--soft-purple);
+    color: var(--text-dark);
+}

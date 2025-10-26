@@ -19,15 +19,28 @@ build/
 static/uploads/*
 !static/uploads/.gitkeep
 
-# Metadata (optional - commit nếu muốn backup)
-# images_metadata.json
+# Music (Optional - commit nếu file nhỏ)
+# static/music/*.mp3
+
+# Metadata
+images_metadata.json
 
 # OS
 .DS_Store
 Thumbs.db
+*.swp
+*.swo
 
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
+*.iml
+
+# Logs
+*.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/

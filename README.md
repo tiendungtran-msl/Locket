@@ -1,49 +1,85 @@
 # 💝 Our Memories - Ứng dụng chia sẻ ảnh lãng mạn
 
-Ứng dụng web lãng mạn giống Locket để chia sẻ và lưu giữ những khoảnh khắc đẹp nhất của hai người.
-
-![Our Memories](https://img.shields.io/badge/Love-Forever-ff69b4)
-![Python](https://img.shields.io/badge/Python-3.9+-blue)
-![Flask](https://img.shields.io/badge/Flask-3.0-green)
+Ứng dụng web lãng mạn với kiến trúc frontend module hóa, responsive hoàn hảo, và nhạc nền lãng mạn.
 
 ## ✨ Tính năng
 
-### 📸 Upload & Lưu trữ
-- ✅ Upload ảnh từ máy tính hoặc điện thoại
-- ✅ Thêm caption/mô tả cho mỗi ảnh
-- ✅ Lưu trữ local hoặc Cloudinary (vĩnh viễn)
-- ✅ Hỗ trợ nhiều định dạng: JPG, PNG, GIF, HEIC, WebP
+### 📸 Trang chủ - Upload
+- Upload ảnh với preview
+- Thêm caption/mô tả
+- Drag & drop support
+- Paste from clipboard
+- Character counter
+- Success animation
 
-### 🖼️ Gallery & Hiển thị
-- ✅ Hiển thị tất cả ảnh trong gallery đẹp mắt
-- ✅ Date stamps - Hiển thị ngày upload
-- ✅ Captions - Mô tả cho mỗi ảnh
-- ✅ Lightbox - Xem ảnh phóng to với điều hướng
+### 🖼️ Trang Gallery - Xem kỷ niệm  
+- Grid layout responsive
+- Hiển thị caption & date
+- Download & Delete buttons
+- Auto refresh
+- Empty state design
+
+### 🔍 Lightbox
+- Fullscreen view
+- Keyboard navigation (←/→/ESC)
+- Touch gestures
+- Image preloading
+- Zoom on double-click
+- Download & Delete actions
 
 ### 🎬 Slideshow
-- ✅ Tự động chuyển ảnh mỗi 4 giây
-- ✅ Hiển thị caption và date
-- ✅ Progress indicator
-- ✅ Toàn màn hình
+- Auto-advance (4s/image)
+- Play/Pause control
+- Progress indicator
+- Keyboard & touch navigation
+- Smooth transitions
 
-### 🔧 Quản lý
-- ✅ Download ảnh về máy
-- ✅ Delete ảnh với xác nhận
-- ✅ Auto refresh gallery
-- ✅ Responsive - Hoạt động tốt trên mobile
+### 🎵 Music Player
+- 3 romantic tracks
+- Play/Pause toggle
+- Volume control
+- Track selection menu
+- Persistent settings
+- Keyboard shortcuts (Space, M, 1-3)
 
-### 🎨 Giao diện
-- ✅ Gradient background lãng mạn
-- ✅ Floating hearts animation
-- ✅ Smooth transitions
-- ✅ Modern & clean design
+### 📱 Responsive Design
+- Mobile-first approach
+- Tablet optimization
+- Desktop enhancement
+- Landscape orientation support
+- Touch-friendly controls
 
-## 🚀 Cài đặt & Chạy Local
+## 🎨 Kiến trúc Frontend
+
+```
+frontend/
+├── index.html              # Trang upload
+├── gallery.html            # Trang xem ảnh
+├── css/
+│   ├── common.css         # Styles chung (nav, music, footer...)
+│   ├── home.css           # Styles trang chủ
+│   ├── gallery.css        # Styles gallery, lightbox, slideshow
+│   └── responsive.css     # Media queries cho mọi thiết bị
+├── js/
+│   ├── common.js          # Functions chung (API, date, message...)
+│   ├── upload.js          # Logic upload (preview, drag-drop, paste)
+│   ├── gallery.js         # Logic gallery (render, filter, delete)
+│   ├── lightbox.js        # Logic lightbox (navigation, zoom)
+│   ├── slideshow.js       # Logic slideshow (timer, controls)
+│   └── music.js           # Logic nhạc (play, volume, tracks)
+└── assets/
+    └── music/
+        ├── romantic1.mp3
+        ├── romantic2.mp3
+        └── romantic3.mp3
+```
+
+## 🚀 Cài đặt
 
 ### 1. Clone repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/locket-memories.git
+git clone https://github.com/tiendungtran-msl/locket-memories.git
 cd locket-memories
 ```
 
@@ -51,12 +87,9 @@ cd locket-memories
 
 ```bash
 python -m venv venv
-
-# Windows
-venv\Scripts\activate
-
-# Mac/Linux
-source venv/bin/activate
+source venv/bin/activate  # Mac/Linux
+# hoặc
+venv\Scripts\activate  # Windows
 ```
 
 ### 3. Cài đặt dependencies
@@ -65,7 +98,16 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Chạy ứng dụng
+### 4. Thêm nhạc nền
+
+Tạo thư mục và thêm file nhạc:
+
+```bash
+mkdir -p static/music
+# Copy 3 file nhạc romantic1.mp3, romantic2.mp3, romantic3.mp3 vào đây
+```
+
+### 5. Chạy ứng dụng
 
 ```bash
 python app.py
@@ -73,203 +115,123 @@ python app.py
 
 Truy cập: `http://localhost:5000`
 
-## ☁️ Deploy lên Render.com
+## 🎵 Cấu hình nhạc
 
-### Bước 1: Chuẩn bị Repository
+### Nguồn nhạc miễn phí:
+1. **YouTube Audio Library**: https://studio.youtube.com/
+2. **Free Music Archive**: https://freemusicarchive.org/
+3. **Bensound**: https://www.bensound.com/
 
-1. Push code lên GitHub:
+### Gợi ý bài hát lãng mạn:
+- Perfect - Ed Sheeran
+- All of Me - John Legend
+- A Thousand Years - Christina Perri
+- Thinking Out Loud - Ed Sheeran
+- Make You Feel My Love - Adele
+
+### Chuyển đổi video sang MP3:
 ```bash
-git init
-git add .
-git commit -m "💝 Initial commit"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/locket-memories.git
-git push -u origin main
+# Sử dụng ffmpeg
+ffmpeg -i input.mp4 -vn -ar 44100 -ac 2 -b:a 192k output.mp3
 ```
 
-### Bước 2: Deploy trên Render
+## ⌨️ Keyboard Shortcuts
 
-1. **Đăng ký/Đăng nhập**: https://render.com
-2. **Tạo Web Service**:
-   - Click "New +" → "Web Service"
-   - Connect GitHub repository
-   - Chọn repository `locket-memories`
+### Toàn bộ trang:
+- `M` - Toggle music menu
+- `Space` - Play/Pause music
+- `1-3` - Switch music tracks
+- `ESC` - Close modals/lightbox/slideshow
 
-3. **Cấu hình**:
-   ```
-   Name: locket-memories
-   Region: Singapore
-   Branch: main
-   Runtime: Python 3
-   Build Command: pip install -r requirements.txt
-   Start Command: gunicorn app:app
-   Instance Type: Free
-   ```
+### Lightbox:
+- `←/→` - Navigate images
+- `D` - Download current image
+- `Delete` - Delete current image
+- `Double-click` - Zoom in/out
 
-4. **Deploy**: Click "Create Web Service"
+### Slideshow:
+- `←/→` - Navigate slides
+- `Space` - Play/Pause
+- `ESC` - Exit slideshow
 
-### ⚠️ Lưu ý về Free Plan
+## 📱 Responsive Breakpoints
 
-**Render Free Plan sẽ XÓA ảnh khi restart** vì không có persistent storage.
+- **Mobile**: < 576px
+- **Tablet Portrait**: 576px - 768px
+- **Tablet Landscape**: 768px - 992px
+- **Desktop**: 992px - 1200px
+- **Large Desktop**: > 1200px
 
-**Giải pháp: Sử dụng Cloudinary (FREE & VĨNH VIỄN)**
+## 🎨 Tùy chỉnh màu sắc
 
-## 💾 Cấu hình Cloudinary (Khuyến nghị)
-
-### 1. Đăng ký Cloudinary
-
-1. Truy cập: https://cloudinary.com
-2. Sign Up Free
-3. Xác nhận email
-
-### 2. Lấy API credentials
-
-1. Vào Dashboard
-2. Copy 3 thông tin:
-   - Cloud Name
-   - API Key
-   - API Secret
-
-### 3. Thêm vào Render
-
-1. Vào Render Dashboard → Your Service
-2. Environment → Add Environment Variable
-3. Thêm các biến:
-
-```
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-```
-
-4. **Manual Deploy** → "Deploy latest commit"
-
-### Giới hạn Cloudinary Free:
-- ✅ 25GB storage
-- ✅ 25GB bandwidth/tháng
-- ✅ Lưu ảnh vĩnh viễn
-- ✅ Đủ cho hàng nghìn ảnh!
-
-## 📁 Cấu trúc Project
-
-```
-locket-memories/
-├── app.py                    # Backend Flask
-├── requirements.txt          # Python dependencies
-├── index.html               # Frontend
-├── images_metadata.json     # Metadata storage (auto-generated)
-├── .env.example             # Environment variables template
-├── .gitignore              # Git ignore rules
-├── README.md               # Documentation
-└── static/
-    └── uploads/            # Local image storage
-        └── .gitkeep       # Keep folder in git
-```
-
-## 🔧 API Endpoints
-
-### POST /upload
-Upload ảnh với caption
-
-**Request:**
-```
-FormData:
-  - file: image file
-  - caption: string (optional)
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "💝 Ảnh đã được lưu vào kỷ niệm của chúng ta!",
-  "image": {
-    "id": "uuid",
-    "url": "/static/uploads/image.jpg",
-    "caption": "Beautiful moment",
-    "uploaded_at": "2025-10-26T11:48:45Z"
-  }
-}
-```
-
-### GET /images
-Lấy danh sách tất cả ảnh
-
-**Response:**
-```json
-{
-  "success": true,
-  "images": [...],
-  "count": 10
-}
-```
-
-### DELETE /delete/<image_id>
-Xóa ảnh
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "🗑️ Đã xóa ảnh thành công!"
-}
-```
-
-## 🎨 Tùy chỉnh
-
-### Thay đổi màu sắc
-
-Sửa trong `index.html`, phần CSS:
+Sửa trong `css/common.css`:
 
 ```css
-/* Background gradient */
-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-
-/* Upload button */
-background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --success-color: #4CAF50;
+    --danger-color: #f44336;
+}
 ```
 
-### Thay đổi thời gian slideshow
+## ☁️ Deploy lên Render.com
 
-Sửa trong `index.html`, function `startSlideshow()`:
+### 1. Push lên GitHub
 
-```javascript
-// Từ 4 giây thành 5 giây
-}, 5000);
+```bash
+git add .
+git commit -m "💝 Complete romantic app with music"
+git push origin main
 ```
 
-## 🔐 Bảo mật
+### 2. Deploy trên Render
 
-Để thêm authentication (chỉ 2 người truy cập):
+1. Tạo Web Service mới
+2. Connect GitHub repo
+3. Cấu hình:
+   - Build: `pip install -r requirements.txt`
+   - Start: `gunicorn app:app`
+   - Instance: Free
 
-1. Cài đặt Flask-Login
-2. Tạo form đăng nhập
-3. Bảo vệ các routes với `@login_required`
+### 3. Upload nhạc lên Cloudinary (nếu cần)
+
+```python
+# Script để upload nhạc
+import cloudinary.uploader
+
+cloudinary.uploader.upload(
+    "static/music/romantic1.mp3",
+    folder="locket_music",
+    resource_type="video"
+)
+```
 
 ## 🐛 Troubleshooting
 
-### Ảnh không hiển thị
-- Kiểm tra quyền thư mục `static/uploads`
-- Kiểm tra Cloudinary credentials
+### Nhạc không phát:
+- Kiểm tra file nhạc tồn tại trong `/static/music/`
+- Đảm bảo định dạng MP3
+- Check console browser cho lỗi
 
-### Upload lỗi
-- Kiểm tra file size (max 16MB)
-- Kiểm tra định dạng file
-- Xem logs trong console
+### Ảnh không hiển thị:
+- Kiểm tra Cloudinary credentials (nếu dùng)
+- Xem quyền thư mục `/static/uploads/`
 
-### Deploy lỗi trên Render
-- Kiểm tra `requirements.txt`
-- Kiểm tra environment variables
-- Xem Build logs
+### Layout vỡ trên mobile:
+- Xóa cache browser
+- Check viewport meta tag
+- Test trên nhiều thiết bị
 
-## 📝 License
+## 📄 License
 
-MIT License - Tự do sử dụng cho mục đích cá nhân
+MIT License - Free for personal use
 
 ## 💕 Credits
 
-Được tạo với ❤️ bởi GitHub Copilot
+Made with ❤️ by @tiendungtran-msl
+Powered by Flask, Vanilla JS, and Love
 
 ---
 
-**🎉 Chúc bạn và bạn gái có những khoảnh khắc tuyệt vời!**
+**🎉 Chúc bạn và bạn gái có những kỷ niệm đẹp!** 💝

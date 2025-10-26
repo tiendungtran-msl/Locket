@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>💝 Our Memories - Trang Chủ</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+</head>
+<body>
+    <!-- Music Control -->
+    <div class="music-control" id="musicControl">
+        <button class="music-btn" id="musicBtn" onclick="toggleMusicMenu()">
+            🎵
+        </button>
+        <div class="music-menu" id="musicMenu">
+            <div class="music-header">🎶 Nhạc nền lãng mạn</div>
+            <div class="music-list">
+                <button class="music-item" onclick="changeMusic(1)">
+                    <span class="music-icon">🎵</span>
+                    <span class="music-name">Romantic 1</span>
+                </button>
+                <button class="music-item" onclick="changeMusic(2)">
+                    <span class="music-icon">🎵</span>
+                    <span class="music-name">Romantic 2</span>
+                </button>
+                <button class="music-item" onclick="changeMusic(3)">
+                    <span class="music-icon">🎵</span>
+                    <span class="music-name">Romantic 3</span>
+                </button>
+            </div>
+            <div class="volume-control">
+                <span class="volume-icon">🔊</span>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50">
+                <span class="volume-value" id="volumeValue">50%</span>
+            </div>
+            <button class="music-play-btn" id="musicPlayBtn" onclick="toggleMusicPlayPause()">
+                ▶️ Phát nhạc
+            </button>
+        </div>
+    </div>
+
+    <!-- Audio Player (Hidden) -->
+    <audio id="musicPlayer" loop>
+        <source src="/static/music/romantic1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Floating Hearts -->
+    <div class="floating-hearts-container"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">💝 Our Memories</a>
+            <div class="nav-links">
+                <a href="/" class="nav-link active">🏠 Trang chủ</a>
+                <a href="/gallery" class="nav-link">📷 Xem kỷ niệm</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="page-header">
+            <h1 class="main-title">💝 Thêm Kỷ Niệm Mới</h1>
+            <p class="subtitle">Lưu giữ những khoảnh khắc đẹp nhất của chúng ta</p>
+        </header>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <div id="message"></div>
+            
+            <!-- Preview Image -->
+            <div class="image-preview" id="imagePreview">
+                <div class="preview-placeholder">
+                    <span class="preview-icon">📸</span>
+                    <p>Ảnh xem trước sẽ hiển thị ở đây</p>
+                </div>
+                <img id="previewImage" class="preview-img" alt="Preview">
+                <button class="preview-remove" id="removePreview" onclick="removePreview()">✕</button>
+            </div>
+
+            <form class="upload-form" id="uploadForm">
+                <!-- File Input -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="label-icon">🖼️</span>
+                        Chọn ảnh
+                    </label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="fileInput" class="file-input" accept="image/*" required>
+                        <label for="fileInput" class="file-input-label">
+                            <span class="upload-icon">📸</span>
+                            <span class="upload-text">Chọn ảnh từ thiết bị</span>
+                        </label>
+                        <p class="file-name" id="fileName">Chưa chọn file</p>
+                    </div>
+                </div>
+
+                <!-- Caption Input -->
+                <div class="form-group">
+                    <label class="form-label" for="captionInput">
+                        <span class="label-icon">✍️</span>
+                        Ghi chú kỷ niệm
+                    </label>
+                    <textarea 
+                        id="captionInput" 
+                        class="caption-input" 
+                        placeholder="Viết gì đó về khoảnh khắc này... (không bắt buộc)"
+                        maxlength="500"
+                        rows="4"
+                    ></textarea>
+                    <div class="char-count">
+                        <span id="charCount">0</span>/500 ký tự
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="uploadBtn">
+                    <span class="btn-icon">💕</span>
+                    <span class="btn-text">Lưu vào kỷ niệm</span>
+                </button>
+            </form>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <a href="/gallery" class="action-link">
+                    <span class="action-icon">📷</span>
+                    <span class="action-text">Xem tất cả kỷ niệm</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Made with ❤️ for our memories</p>
+        <p class="footer-small">© 2025 Our Memories</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/music.js"></script>
+    <script src="/static/js/upload.js"></script>
+</body>
+</html>
