@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💝 Our Memories - Kỷ Niệm Của Chúng Ta</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Hiệu ứng trái tim bay */
+        @keyframes float-hearts {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .floating-heart {
+            position: fixed;
+            font-size: 20px;
+            animation: float-hearts 15s infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: white;
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .file-input-label:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .file-name {
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            min-height: 20px;
+            margin-top: 10px;
+        }
+
+        .caption-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.3s ease;
+        }
+
+        .caption-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .upload-btn {
+            padding: 15px 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+        }
+
+        .upload-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Message */
+        .message {
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        /* Gallery Controls */
+        .gallery-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 12px 30px;
+            font-size: 1em;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .control-btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        /* Gallery Header */
+        .gallery-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .gallery-header h2 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .image-count {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        /* Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 20px;
+        }
+
+        .image-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            animation: scaleIn 0.5s ease;
+            background: white;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .image-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+        }
+
+        .image-info {
+            padding: 15px;
+            background: white;
+        }
+
+        .image-caption {
+            font-size: 0.95em;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            min-height: 20px;
+        }
+
+        .image-date {
+            font-size: 0.85em;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .image-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.9em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .download-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .download-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            padding: 40px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+
+        .empty-state-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .lightbox img {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 10px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+        }
+
+        .lightbox-info {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .lightbox-caption {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .lightbox-date {
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 3em;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            z-index: 10;
+        }
+
+        .lightbox-close:hover {
+            transform: scale(1.2);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3em;
+            color: white;
+            cursor: pointer;
+            padding: 20px;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .lightbox-nav:hover {
+            transform: translateY(-50%) scale(1.2);
+        }
+
+        .lightbox-prev {
+            left: 20px;
+        }
+
+        .lightbox-next {
+            right: 20px;
+        }
+
+        .lightbox-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .lightbox-btn {
+            padding: 10px 25px;
+            font-size: 1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-download {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .lightbox-download:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        /* Slideshow */
+        .slideshow-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slideshow-container.active {
+            display: flex;
+        }
+
+        .slideshow-content {
+            max-width: 90%;
+            max-height: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .slideshow-image {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 10px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            animation: slideIn 0.5s ease;
+        }
+
+        .slideshow-info {
+            background: rgba(255,255,255,0.95);
+            padding: 20px 40px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 300px;
+        }
+
+        .slideshow-caption {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .slideshow-date {
+            font-size: 0.95em;
+            color: #888;
+        }
+
+        .slideshow-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 3em;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .slideshow-close:hover {
+            transform: scale(1.2);
+        }
+
+        .slideshow-progress {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1.1em;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            border-radius: 50px;
+        }
+
+        /* Confirmation Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+        }
+
+        .modal-content h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-content p {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 30px;
+            font-size: 1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-confirm {
+            background: #f44336;
+            color: white;
+        }
+
+        .modal-confirm:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+
+        .modal-cancel {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .modal-cancel:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+                padding: 10px;
+            }
+
+            .image-card img {
+                height: 200px;
+            }
+
+            .upload-section {
+                padding: 20px;
+            }
+
+            .lightbox-nav {
+                font-size: 2em;
+                padding: 10px;
+            }
+
+            .lightbox-close, .slideshow-close {
+                font-size: 2em;
+                top: 10px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Hearts -->
+    <div class="floating-hearts-container"></div>
+
+    <div class="container">
+        <header>
+            <h1>💝 Our Memories</h1>
+            <p class="subtitle">Nơi lưu giữ những khoảnh khắc đẹp nhất của chúng ta</p>
+        </header>
+
+        <div class="upload-section">
+            <div id="message"></div>
+            <form class="upload-form" id="uploadForm">
+                <div class="file-input-wrapper">
+                    <input type="file" id="fileInput" class="file-input" accept="image/*" required>
+                    <label for="fileInput" class="file-input-label">
+                        📸 Chọn ảnh kỷ niệm
+                    </label>
+                    <p class="file-name" id="fileName">Chưa có file nào được chọn</p>
+                </div>
+                <textarea 
+                    id="captionInput" 
+                    class="caption-input" 
+                    placeholder="✍️ Viết ghi chú cho khoảnh khắc này... (không bắt buộc)"
+                    maxlength="500"
+                ></textarea>
+                <button type="submit" class="upload-btn" id="uploadBtn">
+                    💕 Lưu vào kỷ niệm
+                </button>
+            </form>
+        </div>
+
+        <div class="gallery-controls">
+            <button class="control-btn" id="slideshowBtn" onclick="startSlideshow()">
+                🎬 Bắt đầu Slideshow
+            </button>
+        </div>
+
+        <div class="gallery-header">
+            <h2>📷 Bộ sưu tập kỷ niệm</h2>
+            <p class="image-count" id="imageCount">Đang tải...</p>
+        </div>
+
+        <div class="gallery" id="gallery">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Đang tải ảnh...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">×</span>
+        <span class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">‹</span>
+        <span class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">›</span>
+        <div class="lightbox-content">
+            <img id="lightboxImg" src="" alt="">
+            <div class="lightbox-info">
+                <div class="lightbox-caption" id="lightboxCaption"></div>
+                <div class="lightbox-date" id="lightboxDate"></div>
+                <div class="lightbox-actions">
+                    <button class="lightbox-btn lightbox-download" onclick="downloadCurrentImage()">
+                        ⬇️ Tải xuống
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slideshow -->
+    <div class="slideshow-container" id="slideshow">
+        <span class="slideshow-close" onclick="stopSlideshow()">×</span>
+        <div class="slideshow-content">
+            <img class="slideshow-image" id="slideshowImg" src="" alt="">
+            <div class="slideshow-info">
+                <div class="slideshow-caption" id="slideshowCaption"></div>
+                <div class="slideshow-date" id="slideshowDate"></div>
+            </div>
+        </div>
+        <div class="slideshow-progress" id="slideshowProgress"></div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <h3>⚠️ Xác nhận xóa</h3>
+            <p>Bạn có chắc muốn xóa ảnh này không? Hành động này không thể hoàn tác.</p>
+            <div class="modal-actions">
+                <button class="modal-btn modal-confirm" onclick="confirmDelete()">Xóa</button>
+                <button class="modal-btn modal-cancel" onclick="closeModal()">Hủy</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allImages = [];
+        let currentLightboxIndex = 0;
+        let deleteImageId = null;
+        let slideshowInterval = null;
+        let slideshowIndex = 0;
+
+        // Tạo trái tim bay
+        function createFloatingHearts() {
+            const container = document.querySelector('.floating-hearts-container');
+            const hearts = ['💖', '💝', '💗', '💓', '💕', '💞', '❤️', '🌹'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (Math.random() * 5 + 10) + 's';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                container.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 15000);
+            }, 3000);
+        }
+
+        createFloatingHearts();
+
+        // Xử lý chọn file
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                fileName.textContent = e.target.files[0].name;
+            } else {
+                fileName.textContent = 'Chưa có file nào được chọn';
+            }
+        });
+
+        // Xử lý upload
+        const uploadForm = document.getElementById('uploadForm');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const messageDiv = document.getElementById('message');
+        const captionInput = document.getElementById('captionInput');
+
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const file = fileInput.files[0];
+            if (!file) {
+                showMessage('Vui lòng chọn ảnh!', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('caption', captionInput.value.trim());
+
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = '⏳ Đang tải lên...';
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    fileInput.value = '';
+                    captionInput.value = '';
+                    fileName.textContent = 'Chưa có file nào được chọn';
+                    setTimeout(() => loadImages(), 500);
+                } else {
+                    showMessage(data.error || 'Có lỗi xảy ra!', 'error');
+                }
+            } catch (error) {
+                showMessage('Lỗi kết nối! Vui lòng thử lại.', 'error');
+                console.error('Error:', error);
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = '💕 Lưu vào kỷ niệm';
+            }
+        });
+
+        function showMessage(text, type) {
+            messageDiv.innerHTML = `<div class="message ${type}">${text}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (days === 0) return '📅 Hôm nay';
+            if (days === 1) return '📅 Hôm qua';
+            if (days < 7) return `📅 ${days} ngày trước`;
+            
+            return `📅 ${date.toLocaleDateString('vi-VN')}`;
+        }
+
+        // Tải danh sách ảnh
+        async function loadImages() {
+            const gallery = document.getElementById('gallery');
+            const imageCount = document.getElementById('imageCount');
+
+            try {
+                const response = await fetch('/images');
+                const data = await response.json();
+
+                if (data.success && data.images.length > 0) {
+                    allImages = data.images;
+                    imageCount.textContent = `${data.count} kỷ niệm đẹp 💕`;
+                    
+                    gallery.innerHTML = data.images.map((img, index) => `
+                        <div class="image-card">
+                            <img src="${img.url}" alt="Memory" loading="lazy" onclick="openLightbox(${index})">
+                            <div class="image-info">
+                                <div class="image-caption">${img.caption ? '💭 ' + img.caption : '💝 Khoảnh khắc đẹp'}</div>
+                                <div class="image-date">${formatDate(img.uploaded_at)}</div>
+                                <div class="image-actions">
+                                    <button class="action-btn download-btn" onclick="downloadImage('${img.url}', '${img.filename || 'memory.jpg'}')">
+                                        ⬇️ Tải về
+                                    </button>
+                                    <button class="action-btn delete-btn" onclick="showDeleteConfirm('${img.id}')">
+                                        🗑️ Xóa
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    allImages = [];
+                    imageCount.textContent = 'Chưa có ảnh nào';
+                    gallery.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1/-1;">
+                            <div class="empty-state-icon">📷</div>
+                            <h3>Chưa có kỷ niệm nào</h3>
+                            <p>Hãy bắt đầu lưu lại những khoảnh khắc đẹp nhất của chúng ta! 💕</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading images:', error);
+                gallery.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <p>❌ Không thể tải ảnh. Vui lòng thử lại!</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Lightbox functions
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            updateLightbox();
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        function navigateLightbox(direction) {
+            currentLightboxIndex += direction;
+            if (currentLightboxIndex < 0) currentLightboxIndex = allImages.length - 1;
+            if (currentLightboxIndex >= allImages.length) currentLightboxIndex = 0;
+            updateLightbox();
+        }
+
+        function updateLightbox() {
+            const img = allImages[currentLightboxIndex];
+            document.getElementById('lightboxImg').src = img.url;
+            document.getElementById('lightboxCaption').textContent = img.caption || '💝 Khoảnh khắc đẹp';
+            document.getElementById('lightboxDate').textContent = formatDate(img.uploaded_at);
+        }
+
+        function downloadCurrentImage() {
+            const img = allImages[currentLightboxIndex];
+            downloadImage(img.url, img.filename || 'memory.jpg');
+        }
+
+        // Download function
+        async function downloadImage(url, filename) {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(blobUrl);
+                
+                showMessage('✅ Đã tải ảnh về máy!', 'success');
+            } catch (error) {
+                console.error('Download error:', error);
+                showMessage('❌ Lỗi khi tải ảnh!', 'error');
+            }
+        }
+
+        // Delete functions
+        function showDeleteConfirm(imageId) {
+            deleteImageId = imageId;
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function closeModal() {
+            deleteImageId = null;
+            document.getElementById('confirmModal').classList.remove('active');
+        }
+
+        async function confirmDelete() {
+            if (!deleteImageId) return;
+
+            try {
+                const response = await fetch(`/delete/${deleteImageId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    loadImages();
+                } else {
+                    showMessage(data.error || 'Không thể xóa ảnh!', 'error');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                showMessage('❌ Lỗi khi xóa ảnh!', 'error');
+            } finally {
+                closeModal();
+            }
+        }
+
+        // Slideshow functions
+        function startSlideshow() {
+            if (allImages.length === 0) {
+                showMessage('Chưa có ảnh để phát slideshow!', 'error');
+                return;
+            }
+
+            slideshowIndex = 0;
+            document.getElementById('slideshow').classList.add('active');
+            updateSlideshow();
+            
+            slideshowInterval = setInterval(() => {
+                slideshowIndex = (slideshowIndex + 1) % allImages.length;
+                updateSlideshow();
+            }, 4000); // Chuyển ảnh mỗi 4 giây
+        }
+
+        function stopSlideshow() {
+            if (slideshowInterval) {
+                clearInterval(slideshowInterval);
+                slideshowInterval = null;
+            }
+            document.getElementById('slideshow').classList.remove('active');
+        }
+
+        function updateSlideshow() {
+            const img = allImages[slideshowIndex];
+            document.getElementById('slideshowImg').src = img.url;
+            document.getElementById('slideshowCaption').textContent = img.caption || '💝 Khoảnh khắc đẹp';
+            document.getElementById('slideshowDate').textContent = formatDate(img.uploaded_at);
+            document.getElementById('slideshowProgress').textContent = `${slideshowIndex + 1} / ${allImages.length}`;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('lightbox').classList.contains('active')) {
+                if (e.key === 'ArrowLeft') navigateLightbox(-1);
+                if (e.key === 'ArrowRight') navigateLightbox(1);
+                if (e.key === 'Escape') closeLightbox();
+            }
+            if (document.getElementById('slideshow').classList.contains('active')) {
+                if (e.key === 'Escape') stopSlideshow();
+            }
+        });
+
+        // Đóng lightbox/modal khi click background
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target.id === 'lightbox') closeLightbox();
+        });
+
+        document.getElementById('confirmModal').addEventListener('click', (e) => {
+            if (e.target.id === 'confirmModal') closeModal();
+        });
+
+        // Tải ảnh khi trang load
+        loadImages();
+
+        // Auto refresh mỗi 30 giây
+        setInterval(loadImages, 30000);
+    </script>
+</body>
+</html>
