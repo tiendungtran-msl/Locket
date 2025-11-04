@@ -92,13 +92,19 @@ def upload_file():
         metadata = load_metadata()
         
         if USE_CLOUDINARY:
+            # Reset file pointer về đầu
+            file.seek(0)
+            
             # Upload lên Cloudinary
+            print(f"🔄 Uploading to Cloudinary: {original_filename}")
             result = cloudinary.uploader.upload(
                 file,
                 folder="locket_memories",
                 public_id=image_id,
                 resource_type="auto"
             )
+            print(f"✅ Cloudinary upload success: {result['secure_url']}")
+            
             image_url = result['secure_url']
             
             # Lưu metadata
@@ -112,6 +118,7 @@ def upload_file():
                 'cloudinary_id': result['public_id']
             }
         else:
+            print(f"💾 Saving locally: {filename}")
             # Lưu local
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
@@ -127,7 +134,7 @@ def upload_file():
             }
         
         # Thêm vào metadata và lưu
-        metadata['images'].insert(0, image_data)  # Thêm vào đầu (mới nhất)
+        metadata['images'].insert(0, image_data)
         save_metadata(metadata)
         
         return jsonify({
@@ -137,9 +144,10 @@ def upload_file():
         }), 200
             
     except Exception as e:
-        print(f"Upload error: {str(e)}")
+        print(f"❌ Upload error: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': f'Lỗi khi tải ảnh lên: {str(e)}'}), 500
-
 @app.route('/images', methods=['GET'])
 def get_images():
     try:
