@@ -9,6 +9,7 @@ import cloudinary.uploader
 import cloudinary.api
 from dotenv import load_dotenv
 import uuid
+import time
 
 load_dotenv()
 
@@ -37,7 +38,9 @@ if USE_CLOUDINARY:
     cloudinary.config(
         cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
         api_key=os.getenv('CLOUDINARY_API_KEY'),
-        api_secret=os.getenv('CLOUDINARY_API_SECRET')
+        api_secret=os.getenv('CLOUDINARY_API_SECRET'),
+        secure=True,
+        timeout=120  # Tăng timeout lên 2 phút
     )
 
 def load_metadata():
@@ -95,28 +98,64 @@ def upload_file():
             # Reset file pointer về đầu
             file.seek(0)
             
-            # Upload lên Cloudinary
-            print(f"🔄 Uploading to Cloudinary: {original_filename}")
-            result = cloudinary.uploader.upload(
-                file,
-                folder="locket_memories",
-                public_id=image_id,
-                resource_type="auto"
-            )
-            print(f"✅ Cloudinary upload success: {result['secure_url']}")
+            # Upload lên Cloudinary với retry
+            max_retries = 3
+            retry_count = 0
+            upload_success = False
+            image_data = None
             
-            image_url = result['secure_url']
+            while retry_count < max_retries and not upload_success:
+                try:
+                    print(f"🔄 Uploading to Cloudinary (attempt {retry_count + 1}/{max_retries}): {original_filename}")
+                    result = cloudinary.uploader.upload(
+                        file,
+                        folder="locket_memories",
+                        public_id=image_id,
+                        resource_type="auto",
+                        timeout=120
+                    )
+                    print(f"✅ Cloudinary upload success: {result['secure_url']}")
+                    
+                    image_url = result['secure_url']
+                    
+                    # Lưu metadata
+                    image_data = {
+                        'id': image_id,
+                        'filename': original_filename,
+                        'url': image_url,
+                        'caption': caption,
+                        'uploaded_at': datetime.utcnow().isoformat() + 'Z',
+                        'storage': 'cloudinary',
+                        'cloudinary_id': result['public_id']
+                    }
+                    upload_success = True
+                    
+                except Exception as cloud_error:
+                    retry_count += 1
+                    print(f"⚠️ Cloudinary upload attempt {retry_count} failed: {str(cloud_error)}")
+                    if retry_count < max_retries:
+                        print(f"🔄 Retrying in 2 seconds...")
+                        time.sleep(2)
+                        file.seek(0)  # Reset file pointer
+                    else:
+                        print(f"❌ All Cloudinary upload attempts failed. Falling back to local storage.")
             
-            # Lưu metadata
-            image_data = {
-                'id': image_id,
-                'filename': original_filename,
-                'url': image_url,
-                'caption': caption,
-                'uploaded_at': datetime.utcnow().isoformat() + 'Z',
-                'storage': 'cloudinary',
-                'cloudinary_id': result['public_id']
-            }
+            # Nếu Cloudinary thất bại, fallback về local
+            if not upload_success:
+                print(f"💾 Falling back to local storage: {filename}")
+                file.seek(0)
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
+                
+                image_data = {
+                    'id': image_id,
+                    'filename': filename,
+                    'url': f'/static/uploads/{filename}',
+                    'caption': caption,
+                    'uploaded_at': datetime.utcnow().isoformat() + 'Z',
+                    'storage': 'local'
+                }
+                
         else:
             print(f"💾 Saving locally: {filename}")
             # Lưu local
@@ -148,6 +187,7 @@ def upload_file():
         import traceback
         traceback.print_exc()
         return jsonify({'error': f'Lỗi khi tải ảnh lên: {str(e)}'}), 500
+
 @app.route('/images', methods=['GET'])
 def get_images():
     try:

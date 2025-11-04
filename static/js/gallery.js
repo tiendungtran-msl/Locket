@@ -143,7 +143,7 @@ function refreshGallery() {
     }
     
     loadGalleryImages();
-    showMessage('🔄 Đã làm mới gallery!', 'success');
+    showMessage('🔄 Đã làm mới!', 'success');
 }
 
 /* ========================================
