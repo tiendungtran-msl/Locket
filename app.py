@@ -46,24 +46,36 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def get_images_from_cloudinary():
-    """Lấy tất cả ảnh từ Cloudinary"""
+    """Lấy tất cả ảnh từ Cloudinary với caching"""
     try:
+        print("🔄 Fetching images from Cloudinary...")
         result = cloudinary.api.resources(
             type="upload",
             prefix="locket_memories/",
             max_results=500,
-            context=True  # Lấy metadata (caption)
+            context=True,  # Lấy metadata
+            tags=True,     # Lấy tags
+            metadata=True  # Lấy tất cả metadata
         )
         
         images = []
         for resource in result['resources']:
-            # Parse context để lấy caption
+            # Lấy caption từ context
             caption = ''
+            
+            # Thử lấy từ context.custom.caption
             if 'context' in resource and 'custom' in resource['context']:
                 caption = resource['context']['custom'].get('caption', '')
             
+            # Nếu không có, thử lấy từ metadata (backup)
+            if not caption and 'metadata' in resource:
+                caption = resource['metadata'].get('caption', '')
+            
+            # Extract ID từ public_id
+            image_id = resource['public_id'].replace('locket_memories/', '')
+            
             image_data = {
-                'id': resource['public_id'].split('/')[-1],  # Lấy ID từ public_id
+                'id': image_id,
                 'filename': resource.get('original_filename', 'image') + '.' + resource['format'],
                 'url': resource['secure_url'],
                 'caption': caption,
@@ -76,9 +88,13 @@ def get_images_from_cloudinary():
         # Sort by uploaded date (mới nhất trước)
         images.sort(key=lambda x: x['uploaded_at'], reverse=True)
         
+        print(f"✅ Fetched {len(images)} images from Cloudinary")
         return images
+        
     except Exception as e:
-        print(f"Error fetching from Cloudinary: {str(e)}")
+        print(f"❌ Error fetching from Cloudinary: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return []
 
 @app.route('/')
@@ -115,7 +131,7 @@ def upload_file():
             # Reset file pointer về đầu
             file.seek(0)
             
-            # Upload lên Cloudinary với retry và lưu caption vào context
+            # Upload lên Cloudinary với retry
             max_retries = 3
             retry_count = 0
             upload_success = False
@@ -124,24 +140,33 @@ def upload_file():
             while retry_count < max_retries and not upload_success:
                 try:
                     print(f"🔄 Uploading to Cloudinary (attempt {retry_count + 1}/{max_retries}): {original_filename}")
+                    
+                    # Upload với metadata được lưu TRỰC TIẾP vào Cloudinary
                     result = cloudinary.uploader.upload(
                         file,
                         folder="locket_memories",
                         public_id=image_id,
                         resource_type="auto",
-                        timeout=120,
-                        context=f"caption={caption}"  # Lưu caption vào Cloudinary
+                        timeout=60,  # Giảm timeout xuống 60s cho nhanh hơn
+                        context={
+                            'caption': caption,
+                            'uploaded_by': 'locket_app',
+                            'timestamp': datetime.utcnow().isoformat()
+                        },
+                        # Thêm tag để dễ quản lý
+                        tags=['locket', 'memory']
                     )
+                    
                     print(f"✅ Cloudinary upload success: {result['secure_url']}")
                     
                     image_url = result['secure_url']
                     
-                    # Lưu metadata
+                    # Lưu metadata response
                     image_data = {
                         'id': image_id,
                         'filename': original_filename,
                         'url': image_url,
-                        'caption': caption,
+                        'caption': caption,  # Lưu caption từ form, không parse lại
                         'uploaded_at': datetime.utcnow().isoformat() + 'Z',
                         'storage': 'cloudinary',
                         'cloudinary_id': result['public_id']
@@ -152,9 +177,9 @@ def upload_file():
                     retry_count += 1
                     print(f"⚠️ Cloudinary upload attempt {retry_count} failed: {str(cloud_error)}")
                     if retry_count < max_retries:
-                        print(f"🔄 Retrying in 2 seconds...")
-                        time.sleep(2)
-                        file.seek(0)  # Reset file pointer
+                        print(f"🔄 Retrying in 1 second...")
+                        time.sleep(1)  # Giảm thời gian chờ xuống 1s
+                        file.seek(0)
                     else:
                         print(f"❌ All Cloudinary upload attempts failed. Falling back to local storage.")
             
@@ -209,7 +234,6 @@ def get_images():
         if USE_CLOUDINARY:
             # Lấy từ Cloudinary
             images = get_images_from_cloudinary()
-            print(f"📸 Fetched {len(images)} images from Cloudinary")
         else:
             # Fallback: Lấy từ local
             images = []
@@ -232,7 +256,7 @@ def get_images():
         }), 200
         
     except Exception as e:
-        print(f"Get images error: {str(e)}")
+        print(f"❌ Get images error: {str(e)}")
         import traceback
         traceback.print_exc()
         return jsonify({'error': f'Lỗi khi lấy danh sách ảnh: {str(e)}'}), 500
@@ -245,24 +269,36 @@ def delete_image(image_id):
             try:
                 # Tìm public_id
                 cloudinary_id = f"locket_memories/{image_id}"
-                cloudinary.uploader.destroy(cloudinary_id)
-                print(f"🗑️ Deleted from Cloudinary: {cloudinary_id}")
+                result = cloudinary.uploader.destroy(cloudinary_id)
+                print(f"🗑️ Deleted from Cloudinary: {cloudinary_id}, result: {result}")
+                
+                if result.get('result') == 'ok':
+                    return jsonify({
+                        'success': True,
+                        'message': '🗑️ Đã xóa ảnh thành công!'
+                    }), 200
+                else:
+                    return jsonify({'error': 'Không tìm thấy ảnh trên Cloudinary'}), 404
+                    
             except Exception as e:
-                print(f"Cloudinary delete error: {str(e)}")
+                print(f"❌ Cloudinary delete error: {str(e)}")
                 return jsonify({'error': f'Lỗi khi xóa ảnh: {str(e)}'}), 500
         else:
             # Xóa local file
             filepath = os.path.join('static/uploads', image_id)
             if os.path.exists(filepath):
                 os.remove(filepath)
-        
-        return jsonify({
-            'success': True,
-            'message': '🗑️ Đã xóa ảnh thành công!'
-        }), 200
+                return jsonify({
+                    'success': True,
+                    'message': '🗑️ Đã xóa ảnh thành công!'
+                }), 200
+            else:
+                return jsonify({'error': 'Không tìm thấy file'}), 404
         
     except Exception as e:
-        print(f"Delete error: {str(e)}")
+        print(f"❌ Delete error: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': f'Lỗi khi xóa ảnh: {str(e)}'}), 500
 
 # Error handlers
