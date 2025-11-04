@@ -1,6 +1,15 @@
 {
   "images": [
     {
+      "id": "29a1f1aa-66ce-4b12-91d8-59d49c204e14",
+      "filename": "Anh_Dung.jpg",
+      "url": "https://res.cloudinary.com/dgzutajrr/image/upload/v1762250946/locket_memories/29a1f1aa-66ce-4b12-91d8-59d49c204e14.jpg",
+      "caption": "AI",
+      "uploaded_at": "2025-11-04T10:09:04.799252Z",
+      "storage": "cloudinary",
+      "cloudinary_id": "locket_memories/29a1f1aa-66ce-4b12-91d8-59d49c204e14"
+    },
+    {
       "id": "61a46b62-9c5e-4f3d-b1a9-84717a41c492",
       "filename": "ChatGPT_Image_22_56_42_26_thg_8_2025.png",
       "url": "https://res.cloudinary.com/dgzutajrr/image/upload/v1762222924/locket_memories/61a46b62-9c5e-4f3d-b1a9-84717a41c492.png",
